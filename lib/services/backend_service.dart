@@ -6,13 +6,13 @@ class BackendService {
 
   static String get _backendUrl {
     final backendUrl = Platform.environment['BACKEND_URL'];
-    if (backendUrl == null) throw Exception('BACKEND_URL is not set');
+    if (backendUrl == null) throw 'BACKEND_URL is not set';
     return backendUrl;
   }
 
   static Future<void> notifyUsers(String message) async {
     final cronSecret = Platform.environment['CRON_SECRET'];
-    if (cronSecret == null) throw Exception('CRON_SECRET is not set');
+    if (cronSecret == null) throw 'CRON_SECRET is not set';
 
     final client = HttpClient();
 
@@ -31,7 +31,7 @@ class BackendService {
         await response.drain();
       } else {
         final errorBody = await response.transform(utf8.decoder).join();
-        throw Exception('Failed with status: ${response.statusCode}. Body: $errorBody');
+        throw 'Failed with status: ${response.statusCode}. Body: $errorBody';
       }
     } catch (e) {
       stderr.writeln('Error during HTTP request: $e');

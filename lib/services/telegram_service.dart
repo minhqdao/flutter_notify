@@ -1,30 +1,45 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_releases/db/schema.dart';
-import 'package:teledart/teledart.dart';
-import 'package:teledart/telegram.dart';
 
 class TelegramService {
   const TelegramService._();
 
   static Future<void> notifyAdmin(String message) async {
     final adminChatId = Platform.environment['ADMIN_CHAT_ID'];
-    if (adminChatId == null) throw Exception('ADMIN_CHAT_ID is not set');
+    if (adminChatId == null) throw 'ADMIN_CHAT_ID is not set';
     await notifyUser(int.parse(adminChatId), message);
   }
 
   static Future<void> notifyUser(int chatId, String message) async {
     final telegramBotToken = Platform.environment['TELEGRAM_BOT_TOKEN'];
-    if (telegramBotToken == null) throw Exception('TELEGRAM_BOT_TOKEN is not set');
+    if (telegramBotToken == null) throw 'TELEGRAM_BOT_TOKEN is not set';
 
-    final username = (await Telegram(telegramBotToken).getMe()).username;
-    final teledart = TeleDart(telegramBotToken, Event(username!));
-    teledart.start();
+    final client = HttpClient();
 
     try {
-      await teledart.sendMessage(chatId, getEscapedText(message), parseMode: 'MarkdownV2');
+      final request = await client.postUrl(Uri.parse('https://api.telegram.org/bot$telegramBotToken/sendMessage'));
+      final payload = json.encode({'chat_id': chatId, 'text': getEscapedText(message), 'parse_mode': 'MarkdownV2'});
+
+      request
+        ..headers.set('Content-Type', 'application/json')
+        ..add(utf8.encode(payload));
+
+      final response = await request.close();
+
+      if (response.statusCode != 200) {
+        final responseBody = await response.transform(utf8.decoder).join();
+        final errorData = json.decode(responseBody) as Map<String, dynamic>;
+        throw 'Telegram API error: ${errorData['description']} (${response.statusCode})';
+      }
+
+      await response.drain();
+    } catch (e) {
+      stderr.writeln('Failed to send message to chatId $chatId: $e');
+      rethrow;
     } finally {
-      teledart.stop();
+      client.close();
     }
   }
 

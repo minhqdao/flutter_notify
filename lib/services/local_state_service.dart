@@ -46,15 +46,15 @@ class LocalStateService {
       final response = await request.close();
 
       if (response.statusCode == HttpStatus.notModified) return const NoUpdate();
-      if (response.statusCode != HttpStatus.ok) throw HttpException('Failed to load releases: ${response.statusCode}');
+      if (response.statusCode != HttpStatus.ok) throw 'Failed to load releases: ${response.statusCode}';
 
       final body = await response.transform(utf8.decoder).join();
       final json = jsonDecode(body);
 
       final newEtag = response.headers.value(HttpHeaders.etagHeader);
 
-      if (newEtag == null) throw Exception('No etag found');
-      if (newEtag == previousEtag) throw Exception('No new release found, etag is the same');
+      if (newEtag == null) throw 'No etag found';
+      if (newEtag == previousEtag) throw 'No new release found, etag is the same';
 
       return Updated(
         ReleaseState(etag: newEtag, lastModified: DateTime.now(), releases: ReleaseState.mapReleases(json)),
@@ -69,11 +69,11 @@ class LocalStateService {
   String getNewReleasesText(List<Release> oldReleases, List<Release> newReleases) {
     final existingReleaseHashes = oldReleases.map((r) => r.hash).toSet();
     final newReleasesFound = newReleases.where((release) => !existingReleaseHashes.contains(release.hash)).toList();
-    if (newReleasesFound.isEmpty) throw Exception('State has been marked as Updated, but no new releases found.');
+    if (newReleasesFound.isEmpty) throw 'State has been marked as Updated, but no new releases found.';
 
     final count = newReleasesFound.length;
     final noun = count == 1 ? 'Update' : 'Updates';
-    final header = '🎉 *$count New SDK $noun available\\!*';
+    final header = '🎉 *$count New SDK $noun available!*';
 
     newReleasesFound.sort((a, b) {
       try {
