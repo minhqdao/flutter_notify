@@ -1,0 +1,37 @@
+name: Cron
+
+permissions:
+    contents: write
+
+on:
+    schedule:
+        - cron: "0 * * * *"
+    workflow_dispatch:
+
+jobs:
+    check_and_update:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - uses: dart-lang/setup-dart@v1
+            - run: dart pub get
+            - run: dart run bin/release_checker.dart
+              env:
+                  ADMIN_CHAT_ID: ${{ secrets.ADMIN_CHAT_ID }}
+                  BACKEND_URL: ${{ secrets.BACKEND_URL }}
+                  CRON_SECRET: ${{ secrets.CRON_SECRET }}
+                  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+                  VERBOSELY_NOTIFY_ADMIN: ${{ secrets.VERBOSELY_NOTIFY_ADMIN }}
+            - run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+                  git add .state/flutter_release_state.json
+
+                  if git diff --cached --quiet; then
+                    echo "No changes to commit"
+                    exit 0
+                  fi
+
+                  git commit -m "chore: update release state"
+                  git push
