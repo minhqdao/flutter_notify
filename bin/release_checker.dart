@@ -17,7 +17,7 @@ Future<void> main(List<String> arguments) async {
         if (verboselyNotifyAdmin) await TelegramService.notifyAdmin('No new releases found');
       case Updated(state: final state)
           when localStateService.areReleasesIdentical(localReleaseState.releases, state.releases):
-        await TelegramService.notifyAdmin('⚠️ States are identical although result marked as Updated.');
+        throw 'States are identical although result marked as Updated.';
       case Updated(state: final state):
         await localStateService.writeState(state);
         final newReleasesText = localStateService.getNewReleasesText(localReleaseState.releases, state.releases);
