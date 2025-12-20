@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_releases/models/release_check_result.dart';
-// import 'package:flutter_releases/services/backend_service.dart';
+import 'package:flutter_releases/services/backend_service.dart';
 import 'package:flutter_releases/services/release_state_service.dart';
 import 'package:flutter_releases/services/telegram_service.dart';
 
@@ -18,8 +18,7 @@ Future<void> main(List<String> arguments) async {
       case Updated(state: final state):
         // await releaseStateService.writeState(state);
         final newReleasesText = releaseStateService.getNewReleasesText(localReleaseState.releases, state.releases);
-        await TelegramService.notifyAdmin(newReleasesText);
-      // await BackendService.notifyUsers(newReleasesText);
+        await BackendService.notifyUsers(newReleasesText);
     }
   } catch (e) {
     await TelegramService.notifyAdmin('🚨 Error: $e');
