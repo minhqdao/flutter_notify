@@ -1,6 +1,6 @@
 <div align="center">
 
-<h3>Get notified when new Flutter SDK versions are released!</h3>
+<h2>Get notified when new Flutter SDK versions are released!</h2>
 
 [![Telegram Bot](https://img.shields.io/badge/Telegram-@FlutterNotifyBot-blue?logo=telegram)](https://t.me/FlutterNotifyBot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
