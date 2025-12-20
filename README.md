@@ -2,12 +2,6 @@
 
 <div align="center">
 
-<div style="background: #121C28; padding: 8px 0 4px 0; margin: 20px 8px">
-
-<img src="assets/logo.png" alt="Flutter Releases Bot Logo" width="92">
-
-</div>
-
 **Get notified when new Flutter SDK versions are released!**
 
 [![Telegram Bot](https://img.shields.io/badge/Telegram-@FlutterNotifyBot-blue?logo=telegram)](https://t.me/FlutterNotifyBot)
