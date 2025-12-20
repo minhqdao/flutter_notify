@@ -2,9 +2,9 @@
 
 <div align="center">
 
-<div style="background: #121C28; padding: 16px 0 12px 0; margin: 20px 8px">
+<div style="background: #121C28; padding: 8px 0 4px 0; margin: 20px 8px">
 
-<img src="assets/logo.png" alt="Flutter Releases Bot Logo" width="80" style="object-fit: cover; height: 40px;">
+<img src="assets/logo.png" alt="Flutter Releases Bot Logo" width="92">
 
 </div>
 
