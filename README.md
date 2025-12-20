@@ -1,8 +1,6 @@
-# Flutter Releases Telegram Bot
-
 <div align="center">
 
-**Get notified when new Flutter SDK versions are released!**
+<h3>Get notified when new Flutter SDK versions are released!</h3>
 
 [![Telegram Bot](https://img.shields.io/badge/Telegram-@FlutterNotifyBot-blue?logo=telegram)](https://t.me/FlutterNotifyBot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
