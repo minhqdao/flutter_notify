@@ -7,8 +7,8 @@ import 'package:flutter_releases/models/release_state.dart';
 import 'package:flutter_releases/services/telegram_service.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-class LocalStateService {
-  const LocalStateService();
+class ReleaseStateService {
+  const ReleaseStateService();
 
   static const _stateFile = '.state/releases.json';
   static const _releaseEndpoint = 'https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json';
@@ -64,8 +64,6 @@ class LocalStateService {
     }
   }
 
-  bool areReleasesIdentical(List<Release> r1, List<Release> r2) => r1.toSet().difference(r2.toSet()).isEmpty;
-
   String getNewReleasesText(List<Release> oldReleases, List<Release> newReleases) {
     final existingReleaseHashes = oldReleases.map((r) => r.hash).toSet();
     final newReleasesFound = newReleases.where((release) => !existingReleaseHashes.contains(release.hash)).toList();
@@ -87,11 +85,7 @@ class LocalStateService {
       }
     });
 
-    final newReleaseLines = newReleasesFound.map((r) {
-      final escapedVersion = TelegramService.getEscapedText(r.version);
-      return '✅ `${r.channel.name}` • Flutter *$escapedVersion*';
-    }).toList();
-
-    return '$header\n\n${newReleaseLines.join('\n')}';
+    final newReleasesLines = newReleasesFound.map((r) => '✅ `${r.channel.name}` • Flutter *${r.version}*').toList();
+    return '$header\n\n${newReleasesLines.join('\n')}';
   }
 }
