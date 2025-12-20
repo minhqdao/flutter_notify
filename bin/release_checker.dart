@@ -16,7 +16,7 @@ Future<void> main(List<String> arguments) async {
         final verboselyNotifyAdmin = Platform.environment['VERBOSELY_NOTIFY_ADMIN'] == 'true';
         if (verboselyNotifyAdmin) await TelegramService.notifyAdmin('No new releases found');
       case Updated(state: final state):
-        // await releaseStateService.writeState(state);
+        await releaseStateService.writeState(state);
         final newReleasesText = releaseStateService.getNewReleasesText(localReleaseState.releases, state.releases);
         await BackendService.notifyUsers(newReleasesText);
     }

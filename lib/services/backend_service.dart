@@ -17,7 +17,7 @@ class BackendService {
     final client = HttpClient();
 
     try {
-      final request = await client.postUrl(Uri.parse('$_backendUrl/notify-users'));
+      final request = await client.postUrl(Uri.parse('${_backendUrl}notify-users'));
 
       request
         ..headers.set('Content-Type', 'text/plain; charset=utf-8')
