@@ -22,7 +22,7 @@ class BackendService {
       request
         ..headers.set('Content-Type', 'text/plain; charset=utf-8')
         ..headers.set('X-Cron-Secret', cronSecret)
-        ..write(message);
+        ..add(utf8.encode(message));
 
       final response = await request.close();
 
