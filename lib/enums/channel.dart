@@ -1,1 +1,1 @@
-enum Channel { stable, beta, dev, master }
+enum Channel { stable, beta, dev, main, master }
