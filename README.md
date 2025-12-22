@@ -20,7 +20,7 @@ Never miss a Flutter SDK update again! This Telegram bot monitors Flutter's offi
 - 🎯 **Simple commands** - `/start`, `/stop`, `/status`, `/help`
 - 🔒 **Privacy-focused** - only stores your chat ID and notification preferences
 - 💯 **100% Dart** - entire stack written in Dart
-- ⚡ **Fast & reliable** - checks for updates every 10 minutes
+- ⚡ **Fast & reliable** - checks for updates in short intervals
 - 🆓 **Free & open source** - MIT licensed
 
 ## 🤖 Using the Bot
@@ -52,7 +52,7 @@ This project is built entirely in Dart and currently consists of two main compon
 - Deployed on [Globe.dev](https://globe.dev)
 
 ### Release Checker (GitHub Actions)
-- Scheduled cron job (every 10 minutes)
+- Scheduled cron job (short intervals)
 - Monitors Flutter's official releases endpoint:
 https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json
 - Compares ETags to detect changes efficiently
