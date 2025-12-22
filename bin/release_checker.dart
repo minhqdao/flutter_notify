@@ -22,5 +22,6 @@ Future<void> main(List<String> arguments) async {
     }
   } catch (e) {
     await TelegramService.notifyAdmin('🚨 Error: $e');
+    rethrow;
   }
 }
