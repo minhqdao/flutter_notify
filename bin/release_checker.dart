@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter_releases/models/release_check_result.dart';
-import 'package:flutter_releases/services/backend_service.dart';
-import 'package:flutter_releases/services/release_state_service.dart';
-import 'package:flutter_releases/services/telegram_service.dart';
+import 'package:flutter_notify/models/release_check_result.dart';
+import 'package:flutter_notify/services/backend_service.dart';
+import 'package:flutter_notify/services/release_state_service.dart';
+import 'package:flutter_notify/services/telegram_service.dart';
 
 Future<void> main(List<String> arguments) async {
   try {

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:deep_pick/deep_pick.dart';
-import 'package:flutter_releases/services/database_service.dart';
-import 'package:flutter_releases/services/telegram_service.dart';
+import 'package:flutter_notify/services/database_service.dart';
+import 'package:flutter_notify/services/telegram_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';

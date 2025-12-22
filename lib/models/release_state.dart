@@ -1,6 +1,6 @@
 import 'package:deep_pick/deep_pick.dart';
-import 'package:flutter_releases/enums/channel.dart';
-import 'package:flutter_releases/models/release.dart';
+import 'package:flutter_notify/enums/channel.dart';
+import 'package:flutter_notify/models/release.dart';
 
 class ReleaseState {
   const ReleaseState({required this.etag, required this.lastModified, required this.releases});

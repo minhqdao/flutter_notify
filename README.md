@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Dart](https://img.shields.io/badge/Dart-100%25-0175C2?logo=dart)](https://dart.dev)
 
-[Try the Bot](https://t.me/FlutterNotifyBot) • [Report Bug](https://github.com/minhqdao/flutter_releases/issues) • [Request Feature](https://github.com/minhqdao/flutter_releases/issues)
+[Try the Bot](https://t.me/FlutterNotifyBot) • [Report Bug](https://github.com/minhqdao/flutter_notify/issues) • [Request Feature](https://github.com/minhqdao/flutter_notify/issues)
 
 </div>
 
@@ -72,7 +72,7 @@ Things that could help improve the bot:
 
 ## 🐛 Bug Reports & Feature Requests
 
-Found a bug or have a feature idea? Please [open an issue](https://github.com/minhqdao/flutter_releases/issues) with:
+Found a bug or have a feature idea? Please [open an issue](https://github.com/minhqdao/flutter_notify/issues) with:
 - A clear description of the issue/feature
 - Steps to reproduce (for bugs)
 - Expected vs actual behavior

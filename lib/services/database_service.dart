@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:flutter_releases/db/schema.dart';
+import 'package:flutter_notify/db/schema.dart';
 
 class DatabaseService {
   DatabaseService();

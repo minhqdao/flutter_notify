@@ -1,4 +1,4 @@
-import 'package:flutter_releases/models/release_state.dart';
+import 'package:flutter_notify/models/release_state.dart';
 
 sealed class ReleaseCheckResult {
   const ReleaseCheckResult();

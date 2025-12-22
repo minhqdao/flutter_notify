@@ -1,4 +1,4 @@
-import 'package:flutter_releases/enums/channel.dart';
+import 'package:flutter_notify/enums/channel.dart';
 
 class Release {
   const Release({

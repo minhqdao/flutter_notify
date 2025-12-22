@@ -1,7 +1,7 @@
-name: flutter_releases
+name: flutter_notify
 description: Telegram bot for Flutter release notifications.
 version: 0.1.0
-repository: https://github.com/minhqdao/flutter_releases
+repository: https://github.com/minhqdao/flutter_notify
 
 environment:
   sdk: ^3.10.4

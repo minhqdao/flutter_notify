@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_releases/models/release.dart';
-import 'package:flutter_releases/models/release_check_result.dart';
-import 'package:flutter_releases/models/release_state.dart';
-import 'package:flutter_releases/services/telegram_service.dart';
+import 'package:flutter_notify/models/release.dart';
+import 'package:flutter_notify/models/release_check_result.dart';
+import 'package:flutter_notify/models/release_state.dart';
+import 'package:flutter_notify/services/telegram_service.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 class ReleaseStateService {
