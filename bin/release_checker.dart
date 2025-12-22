@@ -7,18 +7,18 @@ import 'package:flutter_notify/services/telegram_service.dart';
 
 Future<void> main(List<String> arguments) async {
   try {
-    const releaseStateService = ReleaseStateService();
-    final localReleaseState = await releaseStateService.getLocalReleaseState();
-    final result = await releaseStateService.getFlutterReleases(localReleaseState.etag);
+    final localReleaseState = await ReleaseStateService.getLocalReleaseState();
+    final result = await ReleaseStateService.getLatestReleases(localReleaseState.etag);
 
     switch (result) {
       case NoUpdate():
         final verboselyNotifyAdmin = Platform.environment['VERBOSELY_NOTIFY_ADMIN'] == 'true';
         if (verboselyNotifyAdmin) await TelegramService.notifyAdmin('No new releases found');
       case Updated(state: final state):
-        await releaseStateService.writeState(state);
-        final newReleasesText = releaseStateService.getNewReleasesText(localReleaseState.releases, state.releases);
-        await BackendService.notifyUsers(newReleasesText);
+        await ReleaseStateService.writeState(state);
+        final newReleases = ReleaseStateService.getSortedReleasesDiff(localReleaseState.releases, state.releases);
+        final notificationtext = ReleaseStateService.getFormattedReleasesText(newReleases);
+        await BackendService.notifyUsers(notificationtext);
     }
   } catch (e) {
     await TelegramService.notifyAdmin('🚨 Error: $e');

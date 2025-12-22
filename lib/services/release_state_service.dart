@@ -8,33 +8,33 @@ import 'package:flutter_notify/services/telegram_service.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 class ReleaseStateService {
-  const ReleaseStateService();
+  const ReleaseStateService._();
 
   static const _stateFile = '.state/releases.json';
   static const _releaseEndpoint = 'https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json';
 
-  Future<void> resetState() async {
-    switch (await getFlutterReleases()) {
+  static Future<void> resetState() async {
+    switch (await getLatestReleases()) {
       case Updated(state: final state):
         await writeState(state);
       case NoUpdate():
     }
   }
 
-  Future<void> writeState(ReleaseState releaseState) async {
+  static Future<void> writeState(ReleaseState releaseState) async {
     await File(_stateFile).parent.create(recursive: true);
     final tmpFile = File('$_stateFile.tmp');
     await tmpFile.writeAsString(const JsonEncoder.withIndent('  ').convert(releaseState.toJson()));
     await tmpFile.rename(_stateFile);
   }
 
-  Future<ReleaseState> getLocalReleaseState() async {
+  static Future<ReleaseState> getLocalReleaseState() async {
     final file = File(_stateFile);
     if (!file.existsSync()) await resetState();
     return ReleaseState.fromJson(jsonDecode(await file.readAsString()));
   }
 
-  Future<ReleaseCheckResult> getFlutterReleases([String? previousEtag]) async {
+  static Future<ReleaseCheckResult> getLatestReleases([String? previousEtag]) async {
     final client = HttpClient();
 
     try {
@@ -64,14 +64,10 @@ class ReleaseStateService {
     }
   }
 
-  String getNewReleasesText(List<Release> oldReleases, List<Release> newReleases) {
+  static List<Release> getSortedReleasesDiff(List<Release> oldReleases, List<Release> newReleases) {
     final existingReleaseHashes = oldReleases.map((r) => r.hash).toSet();
     final newReleasesFound = newReleases.where((release) => !existingReleaseHashes.contains(release.hash)).toList();
     if (newReleasesFound.isEmpty) throw 'State has been marked as Updated, but no new releases found.';
-
-    final count = newReleasesFound.length;
-    final noun = count == 1 ? 'Update' : 'Updates';
-    final header = '🎉 *$count New SDK $noun available!*';
 
     newReleasesFound.sort((a, b) {
       try {
@@ -85,7 +81,15 @@ class ReleaseStateService {
       }
     });
 
-    final newReleasesLines = newReleasesFound.map((r) => '✅ `${r.channel.name}` • Flutter *${r.version}*').toList();
+    return newReleasesFound;
+  }
+
+  static String getFormattedReleasesText(List<Release> releases) {
+    final count = releases.length;
+    final noun = count == 1 ? 'Update' : 'Updates';
+    final header = '🎉 *$count New SDK $noun available!*';
+
+    final newReleasesLines = releases.map((r) => '✅ `${r.channel.name}` • Flutter *${r.version}*').toList();
     return '$header\n\n${newReleasesLines.join('\n')}';
   }
 }
