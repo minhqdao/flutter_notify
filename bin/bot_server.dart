@@ -69,6 +69,7 @@ void main() async {
       return Response.ok('OK');
     } catch (e) {
       stderr.writeln('Error processing webhook: $e');
+      TelegramService.notifyAdmin('🚨 Error processing webhook: $e');
       return Response.ok('😣 An error occurred');
     }
   });
