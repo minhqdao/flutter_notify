@@ -62,12 +62,13 @@ https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.jso
 
 Things that could help improve the bot:
 
-- 🌍 Support for multiple release channels (stable, beta, dev)
-- 📢 Support for the main channel
+- 🌍 Support for multiple release channels (`stable`, `beta`)
+- 📢 Support for the `main` channel
 - 🎯 Support for Dart SDK release notifications
-- 🔗 Integration with Discord, Slack, and other platforms
+- 📋 `/check` command to view the latest versions across all channels
 - 🔍 Detailed mode with changelogs and commit diffs
 - ⏰ Weekly summaries
+- 🔗 Integration with Discord, Slack, and other platforms
 - 😬 Tests
 
 ## 🐛 Bug Reports & Feature Requests
