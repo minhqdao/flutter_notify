@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:deep_pick/deep_pick.dart';
+import 'package:flutter_notify/enums/channel.dart';
+import 'package:flutter_notify/models/release.dart';
+import 'package:flutter_notify/models/release_check_result.dart';
 import 'package:flutter_notify/services/database_service.dart';
+import 'package:flutter_notify/services/release_state_service.dart';
 import 'package:flutter_notify/services/telegram_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -59,6 +63,37 @@ void main() async {
             );
             stderr.writeln('Could not find chatId $chatId');
           }
+        case '/latest':
+          final parts = text.split(' ');
+          final channelArg = parts.length > 1 ? parts[1] : null;
+
+          final result = await ReleaseStateService.getAllFlutterReleases();
+          switch (result) {
+            case NoUpdate():
+              throw 'The NoUpdate case should never be reached';
+            case Updated(state: final state):
+              late final List<Release> releases;
+
+              if (channelArg == null) {
+                final unsortedReleases = [
+                  ...ReleaseStateService.getLatestRelease(state.releases, Channel.stable, 1),
+                  ...ReleaseStateService.getLatestRelease(state.releases, Channel.beta, 1),
+                ];
+                releases = ReleaseStateService.getReleasesSortedByDescendingVersion(unsortedReleases);
+              } else {
+                releases = ReleaseStateService.getLatestRelease(state.releases, Channel.values.byName(channelArg), 10);
+              }
+
+              const header = '*Latest Flutter Releases*';
+              final newReleasesLines = releases
+                  .map(
+                    (r) => '• `${r.channel.name}` • *${r.version}* • ${ReleaseStateService.getFormattedDate(r.date)}',
+                  )
+                  .toList();
+
+              await TelegramService.notifyUser(chatId, '$header\n\n${newReleasesLines.join('\n')}');
+          }
+
         case '/help':
           await TelegramService.notifyUser(chatId, TelegramService.getHelpMessage());
           stdout.writeln('Sent help message to chatId $chatId');

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_notify/enums/channel.dart';
 import 'package:flutter_notify/models/release.dart';
 import 'package:flutter_notify/models/release_check_result.dart';
 import 'package:flutter_notify/models/release_state.dart';
@@ -14,7 +15,7 @@ class ReleaseStateService {
   static const _releaseEndpoint = 'https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json';
 
   static Future<void> resetState() async {
-    switch (await getLatestReleases()) {
+    switch (await getAllFlutterReleases()) {
       case Updated(state: final state):
         await writeState(state);
       case NoUpdate():
@@ -34,7 +35,7 @@ class ReleaseStateService {
     return ReleaseState.fromJson(jsonDecode(await file.readAsString()));
   }
 
-  static Future<ReleaseCheckResult> getLatestReleases([String? previousEtag]) async {
+  static Future<ReleaseCheckResult> getAllFlutterReleases([String? previousEtag]) async {
     final client = HttpClient();
 
     try {
@@ -69,27 +70,43 @@ class ReleaseStateService {
     final newReleasesFound = newReleases.where((release) => !existingReleaseHashes.contains(release.hash)).toList();
     if (newReleasesFound.isEmpty) throw 'State has been marked as Updated, but no new releases found.';
 
-    newReleasesFound.sort((a, b) {
-      try {
-        Version parseReleaseVersion(String s) => Version.parse(s.startsWith('v') ? s.substring(1) : s);
-        final versionA = parseReleaseVersion(a.version);
-        final versionB = parseReleaseVersion(b.version);
-        return versionB.compareTo(versionA);
-      } catch (e) {
-        TelegramService.notifyAdmin('🚨 Failed to parse version for sorting. Keeping original order. Error: $e');
-        return 0;
-      }
-    });
-
-    return newReleasesFound;
+    return getReleasesSortedByDescendingVersion(newReleasesFound);
   }
 
-  static String getFormattedReleasesText(List<Release> releases) {
+  static List<Release> getReleasesSortedByDescendingVersion(List<Release> releases) {
+    final List<({Release release, Version? version})> mapped = releases.map((r) {
+      try {
+        final cleanVersion = r.version.startsWith('v') ? r.version.substring(1) : r.version;
+        return (release: r, version: Version.parse(cleanVersion));
+      } catch (e) {
+        TelegramService.notifyAdmin('🚨 Failed to parse version for sorting. Error: $e');
+        return (release: r, version: null);
+      }
+    }).toList();
+
+    mapped.sort((a, b) {
+      if (a.version == null) return 1;
+      if (b.version == null) return -1;
+      return b.version!.compareTo(a.version!);
+    });
+
+    return mapped.map((m) => m.release).toList();
+  }
+
+  static List<Release> getLatestRelease(List<Release> releases, Channel channel, int amount) =>
+      getReleasesSortedByDescendingVersion(releases.where((r) => r.channel == channel).toList()).take(amount).toList();
+
+  static String getNewReleasesText(List<Release> releases) {
     final count = releases.length;
     final noun = count == 1 ? 'Update' : 'Updates';
     final header = '🎉 *$count New SDK $noun available!*';
 
     final newReleasesLines = releases.map((r) => '✅ `${r.channel.name}` • Flutter *${r.version}*').toList();
     return '$header\n\n${newReleasesLines.join('\n')}';
+  }
+
+  static String getFormattedDate(DateTime date) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return "${months[date.month - 1]} ${date.day}, ${date.year}";
   }
 }

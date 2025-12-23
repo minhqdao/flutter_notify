@@ -5,7 +5,7 @@ class Release {
     required this.hash,
     required this.channel,
     required this.version,
-    required this.releaseDate,
+    required this.date,
     required this.archivePath,
     required this.sha256,
   });
@@ -13,7 +13,7 @@ class Release {
   final String hash;
   final Channel channel;
   final String version;
-  final DateTime releaseDate;
+  final DateTime date;
   final String archivePath;
   final String sha256;
 
@@ -21,14 +21,14 @@ class Release {
     'hash': hash,
     'channel': channel.name,
     'version': version,
-    'release_date': releaseDate.toIso8601String(),
+    'release_date': date.toIso8601String(),
     'archive': archivePath,
     'sha256': sha256,
   };
 
   @override
   String toString() =>
-      'Release(hash: $hash, channel: $channel, version: $version, releaseDate: $releaseDate, archivePath: $archivePath, sha256: $sha256)';
+      'Release(hash: $hash, channel: $channel, version: $version, releaseDate: $date, archivePath: $archivePath, sha256: $sha256)';
 
   @override
   int get hashCode => Object.hash(hash, channel);

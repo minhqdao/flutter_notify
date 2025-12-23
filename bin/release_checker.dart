@@ -8,7 +8,7 @@ import 'package:flutter_notify/services/telegram_service.dart';
 Future<void> main(List<String> arguments) async {
   try {
     final localReleaseState = await ReleaseStateService.getLocalReleaseState();
-    final result = await ReleaseStateService.getLatestReleases(localReleaseState.etag);
+    final result = await ReleaseStateService.getAllFlutterReleases(localReleaseState.etag);
 
     switch (result) {
       case NoUpdate():
@@ -17,7 +17,7 @@ Future<void> main(List<String> arguments) async {
       case Updated(state: final state):
         await ReleaseStateService.writeState(state);
         final newReleases = ReleaseStateService.getSortedReleasesDiff(localReleaseState.releases, state.releases);
-        final notificationtext = ReleaseStateService.getFormattedReleasesText(newReleases);
+        final notificationtext = ReleaseStateService.getNewReleasesText(newReleases);
         await BackendService.notifyUsers(notificationtext);
     }
   } catch (e) {

@@ -29,7 +29,7 @@ class ReleaseState {
       hash: releaseData('hash').asStringOrThrow(),
       channel: Channel.values.byName(releaseData('channel').asStringOrThrow()),
       version: releaseData('version').asStringOrThrow(),
-      releaseDate: releaseData('release_date').asDateTimeOrThrow(),
+      date: releaseData('release_date').asDateTimeOrThrow(),
       archivePath: releaseData('archive').asStringOrThrow(),
       sha256: releaseData('sha256').asStringOrThrow(),
     );
