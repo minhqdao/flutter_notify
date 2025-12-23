@@ -33,11 +33,12 @@ void main() async {
       final message = pick(data, 'message').asMapOrThrow();
       final text = pick(message, 'text').asStringOrThrow();
       final chatId = pick(message, 'chat', 'id').asIntOrThrow();
+      final textParts = text.split(' ');
+      final command = textParts[0];
 
-      switch (text) {
+      switch (command) {
         case '/start':
-          final parts = text.split(' ');
-          final source = parts.length > 1 ? parts[1] : null;
+          final source = textParts.length > 1 ? textParts[1] : null;
           await DatabaseService().registerUser(chatId, source);
           await TelegramService.notifyUser(
             chatId,
@@ -64,15 +65,13 @@ void main() async {
             stderr.writeln('Could not find chatId $chatId');
           }
         case '/latest':
-          final parts = text.split(' ');
-          final channelArg = parts.length > 1 ? parts[1] : null;
-
           final result = await ReleaseStateService.getAllFlutterReleases();
           switch (result) {
             case NoUpdate():
               throw 'The NoUpdate case should never be reached';
             case Updated(state: final state):
               late final List<Release> releases;
+              final channelArg = textParts.length > 1 ? textParts[1] : null;
 
               if (channelArg == null) {
                 final unsortedReleases = [
@@ -84,7 +83,7 @@ void main() async {
                 releases = ReleaseStateService.getLatestRelease(state.releases, Channel.values.byName(channelArg), 10);
               }
 
-              const header = '*Latest Flutter Releases*';
+              const header = '*Latest Flutter Releases:*';
               final newReleasesLines = releases
                   .map(
                     (r) => '• `${r.channel.name}` • *${r.version}* • ${ReleaseStateService.getFormattedDate(r.date)}',
