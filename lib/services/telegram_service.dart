@@ -58,15 +58,6 @@ class TelegramService {
     return buffer.toString();
   }
 
-  static String getHelpMessage() => '''
-🫡 Available commands:
-
-/start - Enable notifications for Flutter SDK releases
-/stop - Disable notifications
-/status - Check your notification status
-/help - Show this help message
-''';
-
   static String _formatDate(DateTime date) =>
       '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 

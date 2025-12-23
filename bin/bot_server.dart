@@ -108,10 +108,6 @@ void main() async {
               await TelegramService.notifyUser(chatId, '$header\n\n${newReleasesLines.join('\n')}');
               stdout.writeln('Sent latest releases on channel $channelArg to chatId $chatId');
           }
-
-        case '/help':
-          await TelegramService.notifyUser(chatId, TelegramService.getHelpMessage());
-          stdout.writeln('Sent help message to chatId $chatId');
         default:
           stdout.writeln('Unknown command: $text');
       }

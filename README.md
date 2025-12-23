@@ -17,7 +17,7 @@ Never miss a Flutter SDK update again! This Telegram bot monitors Flutter's offi
 ### ✨ Features
 
 - 🚀 **Instant notifications** when new Flutter SDK versions are detected
-- 🎯 **Simple commands** - `/start`, `/stop`, `/status`, `/help`
+- 🎯 **Simple commands** - `/start`, `/stop`, `/status`, `/latest`
 - 🔒 **Privacy-focused** - only stores your chat ID, sign up date and notification preferences
 - 💯 **100% Dart** - entire stack written in Dart
 - ⚡ **Fast & reliable** - checks for updates in short intervals
@@ -38,7 +38,7 @@ Never miss a Flutter SDK update again! This Telegram bot monitors Flutter's offi
 | `/start` | Enable notifications for Flutter SDK releases |
 | `/stop` | Disable notifications |
 | `/status` | Check your current notification status |
-| `/help` | Show available commands |
+| `/latest [stable\|beta]` | Show latest releases |
 
 ## 🛠️ Tech Stack
 
@@ -65,7 +65,6 @@ Things that could help improve the bot:
 - 🌍 Support for multiple release channels (`stable`, `beta`)
 - 📢 Support for the `main` channel
 - 🎯 Support for Dart SDK release notifications
-- 📋 `/latest` command to view the latest versions across all channels
 - 🔍 Detailed mode with changelogs and commit diffs
 - ⏰ Weekly summaries
 - 🔗 Integration with Discord, Slack, and other platforms
