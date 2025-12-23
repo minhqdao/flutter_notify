@@ -110,6 +110,7 @@ void main() async {
           }
         default:
           stdout.writeln('Unknown command: $text');
+          await TelegramService.notifyAdmin('Unknown command: $text');
       }
 
       return Response.ok('OK');
