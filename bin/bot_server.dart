@@ -38,7 +38,7 @@ void main() async {
 
       switch (command) {
         case '/start':
-          final source = textParts.length > 1 ? textParts[1] : null;
+          final source = textParts.length > 1 ? textParts[1].trim() : null;
           await DatabaseService().registerUser(chatId, source);
           await TelegramService.notifyUser(
             chatId,
@@ -71,7 +71,7 @@ void main() async {
               throw 'The NoUpdate case should never be reached';
             case Updated(state: final state):
               late final List<Release> releases;
-              final channelArg = textParts.length > 1 ? textParts[1] : null;
+              final channelArg = textParts.length > 1 ? textParts[1].trim() : null;
 
               if (channelArg == null) {
                 final unsortedReleases = [
@@ -80,7 +80,16 @@ void main() async {
                 ];
                 releases = ReleaseStateService.getReleasesSortedByDescendingVersion(unsortedReleases);
               } else {
-                releases = ReleaseStateService.getLatestRelease(state.releases, Channel.values.byName(channelArg), 10);
+                late final Channel channel;
+
+                try {
+                  channel = Channel.values.byName(channelArg);
+                } catch (_) {
+                  await TelegramService.notifyUser(chatId, 'Unsupported channel: $channelArg');
+                  return Response.ok('Unsupported channel: $channelArg');
+                }
+
+                releases = ReleaseStateService.getLatestRelease(state.releases, channel, 10);
               }
 
               const header = '*Latest Flutter Releases:*';
