@@ -51,8 +51,8 @@ class TelegramService {
 
   static String buildStatusMessage(ChatId user) {
     final buffer = StringBuffer()
-      ..writeln('📅 Joined: ${_formatDate(user.joinedAt)}')
       ..writeln('Your subscription status:\n')
+      ..writeln('📅 Joined: ${_formatDate(user.joinedAt)}')
       ..writeln(user.notificationsEnabled ? '✅ Notifications: Enabled' : '❌ Notifications: Disabled');
     if (!user.notificationsEnabled) buffer.writeln('\nHit /start to re-enable notifications.');
     return buffer.toString();
