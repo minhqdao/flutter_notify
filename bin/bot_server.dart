@@ -55,7 +55,7 @@ void main() async {
           await DatabaseService().unsubscribeUser(chatId);
           await TelegramService.notifyUser(
             chatId,
-            "I won't send you Flutter SDK release alerts anymore. Send /start anytime to re-enable ✌️",
+            "You won't receive Flutter SDK release alerts anymore. Send /start anytime to re-enable.",
           );
           stdout.writeln('Unsubscribed user with chatId $chatId');
         case '/status':
