@@ -33,7 +33,7 @@ void main() async {
       final message = pick(data, 'message').asMapOrThrow();
       final text = pick(message, 'text').asStringOrThrow();
       final chatId = pick(message, 'chat', 'id').asIntOrThrow();
-      final textParts = text.split(' ');
+      final textParts = text.split(RegExp(r'\s+'));
       final command = textParts[0];
 
       switch (command) {
