@@ -64,6 +64,7 @@ Things that could help improve the bot:
 
 - 🌍 Support for indivual release channels (`stable`, `beta`)
 - 📢 Support for the `main` channel
+- ⬇️ Use inline buttons to select channels following `/latest`
 - 🎯 Support for Dart SDK release notifications
 - 🔍 Detailed mode with changelogs and commit diffs
 - ⏰ Weekly summaries
