@@ -30,10 +30,16 @@ void main() async {
     try {
       final body = await request.readAsString();
       final data = jsonDecode(body);
-      final message = pick(data, 'message').asMapOrThrow();
+      final message = pick(data, 'message').asMapOrNull();
+
+      if (message == null) {
+        stderr.writeln('Missing or invalid webhook message.');
+        return Response.ok('Missing or invalid webhook message.');
+      }
+
       final text = pick(message, 'text').asStringOrThrow();
       final chatId = pick(message, 'chat', 'id').asIntOrThrow();
-      final textParts = text.split(' ');
+      final textParts = text.split(RegExp(r'\s+'));
       final command = textParts[0];
 
       switch (command) {
@@ -100,6 +106,7 @@ void main() async {
                   .toList();
 
               await TelegramService.notifyUser(chatId, '$header\n\n${newReleasesLines.join('\n')}');
+              stdout.writeln('Sent latest releases on channel $channelArg to chatId $chatId');
           }
 
         case '/help':
