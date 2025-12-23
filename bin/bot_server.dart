@@ -33,7 +33,7 @@ void main() async {
       final message = pick(data, 'message').asMapOrThrow();
       final text = pick(message, 'text').asStringOrThrow();
       final chatId = pick(message, 'chat', 'id').asIntOrThrow();
-      final textParts = text.split(RegExp(r'\s+'));
+      final textParts = text.split(' ');
       final command = textParts[0];
 
       switch (command) {
@@ -85,7 +85,7 @@ void main() async {
                 try {
                   channel = Channel.values.byName(channelArg);
                 } catch (_) {
-                  await TelegramService.notifyUser(chatId, 'Unsupported channel: $channelArg');
+                  await TelegramService.notifyUser(chatId, '💡 Unsupported channel: $channelArg');
                   return Response.ok('Unsupported channel: $channelArg');
                 }
 
