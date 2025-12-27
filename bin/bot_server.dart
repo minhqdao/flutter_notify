@@ -124,7 +124,7 @@ void main() async {
 
               await TelegramService.notifyUser(
                 chatId,
-                '$header\n\n${newReleasesLines.join('\n')}\n\nChoose channel so see more releases 👇',
+                '$header\n\n${newReleasesLines.join('\n')}\n\nSelect a channel to see more releases 👇',
                 replyMarkup: {
                   'inline_keyboard': [
                     [
