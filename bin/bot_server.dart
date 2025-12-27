@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:deep_pick/deep_pick.dart';
 import 'package:flutter_notify/enums/channel.dart';
-import 'package:flutter_notify/models/release.dart';
 import 'package:flutter_notify/models/release_check_result.dart';
 import 'package:flutter_notify/services/database_service.dart';
 import 'package:flutter_notify/services/release_state_service.dart';
@@ -30,6 +29,39 @@ void main() async {
     try {
       final body = await request.readAsString();
       final data = jsonDecode(body);
+
+      final callbackQuery = pick(data, 'callback_query').asMapOrNull();
+      if (callbackQuery != null) {
+        final callbackData = pick(callbackQuery, 'data').asStringOrThrow();
+        final chatId = pick(callbackQuery, 'message', 'chat', 'id').asIntOrThrow();
+        final callbackQueryId = pick(callbackQuery, 'id').asStringOrThrow();
+
+        switch (callbackData) {
+          case 'latest_stable':
+          case 'latest_beta':
+            final channel = callbackData == 'latest_stable' ? Channel.stable : Channel.beta;
+            final result = await ReleaseStateService.getAllFlutterReleases();
+
+            switch (result) {
+              case NoUpdate():
+                throw 'The NoUpdate case should never be reached';
+              case Updated(state: final state):
+                final releases = ReleaseStateService.getReleasesByChannel(state.releases, channel);
+
+                final header = '*All `${channel.name}` Releases:*';
+                final releasesLines = releases
+                    .map((r) => '• *${r.version}* • ${ReleaseStateService.getFormattedDate(r.date)}')
+                    .toList();
+
+                await TelegramService.notifyUser(chatId, '$header\n\n${releasesLines.join('\n')}');
+                stdout.writeln('Sent ${channel.name} releases to chatId $chatId');
+            }
+        }
+
+        await TelegramService.answerCallbackQuery(callbackQueryId);
+        return Response.ok('OK');
+      }
+
       final message = pick(data, 'message').asMapOrNull();
 
       if (message == null) {
@@ -76,27 +108,11 @@ void main() async {
             case NoUpdate():
               throw 'The NoUpdate case should never be reached';
             case Updated(state: final state):
-              late final List<Release> releases;
-              final channelArg = textParts.length > 1 ? textParts[1].trim() : null;
-
-              if (channelArg == null) {
-                final unsortedReleases = [
-                  ...ReleaseStateService.getLatestRelease(state.releases, Channel.stable, 1),
-                  ...ReleaseStateService.getLatestRelease(state.releases, Channel.beta, 1),
-                ];
-                releases = ReleaseStateService.getReleasesSortedByDescendingVersion(unsortedReleases);
-              } else {
-                late final Channel channel;
-
-                try {
-                  channel = Channel.values.byName(channelArg);
-                } catch (_) {
-                  await TelegramService.notifyUser(chatId, '💡 Unsupported channel: $channelArg');
-                  return Response.ok('Unsupported channel: $channelArg');
-                }
-
-                releases = ReleaseStateService.getLatestRelease(state.releases, channel, 10);
-              }
+              final unsortedReleases = [
+                ...ReleaseStateService.getLatestRelease(state.releases, Channel.stable, 1),
+                ...ReleaseStateService.getLatestRelease(state.releases, Channel.beta, 1),
+              ];
+              final releases = ReleaseStateService.sortByDescendingVersion(unsortedReleases);
 
               const header = '*Latest Flutter Releases:*';
               final newReleasesLines = releases
@@ -105,8 +121,19 @@ void main() async {
                   )
                   .toList();
 
-              await TelegramService.notifyUser(chatId, '$header\n\n${newReleasesLines.join('\n')}');
-              stdout.writeln('Sent latest releases on channel $channelArg to chatId $chatId');
+              await TelegramService.notifyUser(
+                chatId,
+                '$header\n\n${newReleasesLines.join('\n')}\n\nView all releases for a channel 👇',
+                replyMarkup: {
+                  'inline_keyboard': [
+                    [
+                      {'text': 'Stable', 'callback_data': 'latest_stable'},
+                      {'text': 'Beta', 'callback_data': 'latest_beta'},
+                    ],
+                  ],
+                },
+              );
+              stdout.writeln('Sent latest releases with reply markup to chatId $chatId');
           }
         default:
           stdout.writeln('Unknown command: $text');

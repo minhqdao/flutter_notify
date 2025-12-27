@@ -70,10 +70,10 @@ class ReleaseStateService {
     final newReleasesFound = newReleases.where((release) => !existingReleaseHashes.contains(release.hash)).toList();
     if (newReleasesFound.isEmpty) throw 'State has been marked as Updated, but no new releases found.';
 
-    return getReleasesSortedByDescendingVersion(newReleasesFound);
+    return sortByDescendingVersion(newReleasesFound);
   }
 
-  static List<Release> getReleasesSortedByDescendingVersion(List<Release> releases) {
+  static List<Release> sortByDescendingVersion(List<Release> releases) {
     final List<({Release release, Version? version})> mapped = releases.map((r) {
       try {
         final cleanVersion = r.version.startsWith('v') ? r.version.substring(1) : r.version;
@@ -93,8 +93,11 @@ class ReleaseStateService {
     return mapped.map((m) => m.release).toList();
   }
 
+  static List<Release> getReleasesByChannel(List<Release> releases, Channel channel) =>
+      releases.where((r) => r.channel == channel).toList();
+
   static List<Release> getLatestRelease(List<Release> releases, Channel channel, int amount) =>
-      getReleasesSortedByDescendingVersion(releases.where((r) => r.channel == channel).toList()).take(amount).toList();
+      getReleasesByChannel(releases, channel).take(amount).toList();
 
   static String getNewReleasesText(List<Release> releases) {
     final count = releases.length;
