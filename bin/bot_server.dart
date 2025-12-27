@@ -47,9 +47,10 @@ void main() async {
                 throw 'The NoUpdate case should never be reached';
               case Updated(state: final state):
                 final releases = ReleaseStateService.getReleasesByChannel(state.releases, channel);
+                final reversed = releases.take(15).toList().reversed;
 
-                final header = '*All `${channel.name}` Releases:*';
-                final releasesLines = releases
+                final header = '*Latest `${channel.name}` Flutter Releases:*';
+                final releasesLines = reversed
                     .map((r) => '• *${r.version}* • ${ReleaseStateService.getFormattedDate(r.date)}')
                     .toList();
 
@@ -123,7 +124,7 @@ void main() async {
 
               await TelegramService.notifyUser(
                 chatId,
-                '$header\n\n${newReleasesLines.join('\n')}\n\nView all releases for a channel 👇',
+                '$header\n\n${newReleasesLines.join('\n')}\n\nChoose channel so see more releases 👇',
                 replyMarkup: {
                   'inline_keyboard': [
                     [
