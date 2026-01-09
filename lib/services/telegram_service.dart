@@ -28,7 +28,7 @@ class TelegramService {
       final request = await client.postUrl(Uri.parse('https://api.telegram.org/bot$telegramBotToken/sendMessage'));
       final payload = json.encode({
         'chat_id': chatId,
-        'text': getEscapedText(message),
+        'text': _getEscapedText(message),
         'parse_mode': 'MarkdownV2',
         if (replyMarkup != null) 'reply_markup': replyMarkup,
       });
@@ -99,7 +99,7 @@ class TelegramService {
   static String _formatDate(DateTime date) =>
       '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
-  static String getEscapedText(String text) {
+  static String _getEscapedText(String text) {
     const specialChars = ['_', '[', ']', '(', ')', '~', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
 
     var escaped = text;
