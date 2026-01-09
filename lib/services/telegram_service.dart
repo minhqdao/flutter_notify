@@ -13,8 +13,13 @@ class TelegramService {
   }
 
   static Future<void> notifyUsers(List<int> chatIds, String message) async {
-    for (final chatId in chatIds) {
-      await notifyUser(chatId, message);
+    const batchSize = 25;
+    const delayBetweenBatches = Duration(milliseconds: 1100);
+
+    for (var i = 0; i < chatIds.length; i += batchSize) {
+      final batch = chatIds.skip(i).take(batchSize);
+      await Future.wait(batch.map((chatId) => notifyUser(chatId, message)));
+      if (i + batchSize < chatIds.length) await Future.delayed(delayBetweenBatches);
     }
   }
 
