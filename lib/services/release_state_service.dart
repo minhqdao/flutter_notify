@@ -79,7 +79,7 @@ class ReleaseStateService {
         final cleanVersion = r.version.startsWith('v') ? r.version.substring(1) : r.version;
         return (release: r, version: Version.parse(cleanVersion));
       } catch (e) {
-        TelegramService.notifyAdmin('🚨 Failed to parse version for sorting. Error: $e');
+        TelegramService().notifyAdmin('🚨 Failed to parse version for sorting. Error: $e');
         return (release: r, version: null);
       }
     }).toList();

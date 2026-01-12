@@ -13,7 +13,7 @@ Future<void> main(List<String> arguments) async {
     switch (result) {
       case NoUpdate():
         final verboselyNotifyAdmin = Platform.environment['VERBOSELY_NOTIFY_ADMIN'] == 'true';
-        if (verboselyNotifyAdmin) await TelegramService.notifyAdmin('No new releases found');
+        if (verboselyNotifyAdmin) await TelegramService().notifyAdmin('No new releases found');
       case Updated(state: final state):
         await ReleaseStateService.writeState(state);
         final newReleases = ReleaseStateService.getSortedReleasesDiff(localReleaseState.releases, state.releases);
@@ -21,7 +21,7 @@ Future<void> main(List<String> arguments) async {
         await BackendService.notifyUsers(notificationtext);
     }
   } catch (e) {
-    await TelegramService.notifyAdmin('🚨 Error: $e');
+    await TelegramService().notifyAdmin('🚨 Error: $e');
     rethrow;
   }
 }

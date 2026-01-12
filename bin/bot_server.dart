@@ -26,6 +26,8 @@ void main() async {
       return Response.ok('Unauthorized');
     }
 
+    final telegramService = TelegramService();
+
     try {
       final body = await request.readAsString();
       final data = jsonDecode(body);
@@ -54,12 +56,12 @@ void main() async {
                     .map((r) => '• *${r.version}* • ${ReleaseStateService.getFormattedDate(r.date)}')
                     .toList();
 
-                await TelegramService.notifyUser(chatId, '$header\n\n${releasesLines.join('\n')}');
+                await telegramService.notifyUser(chatId, '$header\n\n${releasesLines.join('\n')}');
                 stdout.writeln('Sent ${channel.name} releases to chatId $chatId');
             }
         }
 
-        await TelegramService.answerCallbackQuery(callbackQueryId);
+        await telegramService.answerCallbackQuery(callbackQueryId);
         return Response.ok('OK');
       }
 
@@ -79,14 +81,14 @@ void main() async {
         case '/start':
           final source = textParts.length > 1 ? textParts[1].trim() : null;
           await DatabaseService().registerUser(chatId, source);
-          await TelegramService.notifyUser(
+          await telegramService.notifyUser(
             chatId,
             "You're all set! You'll be notified about new Flutter SDK releases 🚀",
           );
           stdout.writeln('Registered user with chatId $chatId from source $source');
         case '/stop':
           await DatabaseService().unsubscribeUser(chatId);
-          await TelegramService.notifyUser(
+          await telegramService.notifyUser(
             chatId,
             "You won't receive Flutter SDK release alerts anymore. Send /start anytime to re-enable.",
           );
@@ -94,10 +96,10 @@ void main() async {
         case '/status':
           try {
             final user = await DatabaseService().getUserStatus(chatId);
-            await TelegramService.notifyUser(chatId, TelegramService.buildStatusMessage(user));
+            await telegramService.notifyUser(chatId, TelegramService.buildStatusMessage(user));
             stdout.writeln('Status check for chatId $chatId');
           } catch (e) {
-            await TelegramService.notifyUser(
+            await telegramService.notifyUser(
               chatId,
               "I couldn't find you in the database 🤔 Please use /start to enable notifications.",
             );
@@ -122,7 +124,7 @@ void main() async {
                   )
                   .toList();
 
-              await TelegramService.notifyUser(
+              await telegramService.notifyUser(
                 chatId,
                 '$header\n\n${newReleasesLines.join('\n')}\n\nSelect a channel to see more releases 👇',
                 replyMarkup: {
@@ -138,13 +140,13 @@ void main() async {
           }
         default:
           stdout.writeln('Unknown command: $text');
-          await TelegramService.notifyUser(chatId, 'Unknown command: $text');
+          await telegramService.notifyUser(chatId, 'Unknown command: $text');
       }
 
       return Response.ok('OK');
     } catch (e) {
       stderr.writeln('Error processing webhook: $e');
-      TelegramService.notifyAdmin('🚨 Error processing webhook: $e');
+      telegramService.notifyAdmin('🚨 Error processing webhook: $e');
       return Response.ok('😣 An error occurred');
     }
   });
@@ -164,7 +166,7 @@ void main() async {
 
     final message = await request.readAsString();
     final users = await DatabaseService().getSubscribedUsers();
-    await TelegramService.notifyUsers(users, message);
+    await TelegramService().notifyUsers(users, message);
     return Response.ok('OK');
   });
 

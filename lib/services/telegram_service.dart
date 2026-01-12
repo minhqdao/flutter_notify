@@ -4,15 +4,18 @@ import 'dart:io';
 import 'package:flutter_notify/db/schema.dart';
 
 class TelegramService {
-  const TelegramService._();
+  TelegramService();
 
-  static Future<void> notifyAdmin(String message) async {
+  final _client = HttpClient();
+  final _botToken = Platform.environment['TELEGRAM_BOT_TOKEN'] ?? (throw StateError('TELEGRAM_BOT_TOKEN not set'));
+
+  Future<void> notifyAdmin(String message) async {
     final adminChatId = Platform.environment['ADMIN_CHAT_ID'];
     if (adminChatId == null) throw 'ADMIN_CHAT_ID is not set';
     await notifyUser(int.parse(adminChatId), message);
   }
 
-  static Future<void> notifyUsers(List<int> chatIds, String message) async {
+  Future<void> notifyUsers(List<int> chatIds, String message) async {
     const batchSize = 25;
     const delayBetweenBatches = Duration(milliseconds: 1100);
 
@@ -23,14 +26,9 @@ class TelegramService {
     }
   }
 
-  static Future<void> notifyUser(int chatId, String message, {Map<String, dynamic>? replyMarkup}) async {
-    final telegramBotToken = Platform.environment['TELEGRAM_BOT_TOKEN'];
-    if (telegramBotToken == null) throw 'TELEGRAM_BOT_TOKEN is not set';
-
-    final client = HttpClient();
-
+  Future<void> notifyUser(int chatId, String message, {Map<String, dynamic>? replyMarkup}) async {
     try {
-      final request = await client.postUrl(Uri.parse('https://api.telegram.org/bot$telegramBotToken/sendMessage'));
+      final request = await _client.postUrl(Uri.parse('https://api.telegram.org/bot$_botToken/sendMessage'));
       final payload = json.encode({
         'chat_id': chatId,
         'text': _getEscapedText(message),
@@ -53,22 +51,12 @@ class TelegramService {
       await response.drain();
     } catch (e) {
       stderr.writeln('Failed to send message to chatId $chatId: $e');
-      rethrow;
-    } finally {
-      client.close();
     }
   }
 
-  static Future<void> answerCallbackQuery(String callbackQueryId) async {
-    final telegramBotToken = Platform.environment['TELEGRAM_BOT_TOKEN'];
-    if (telegramBotToken == null) throw 'TELEGRAM_BOT_TOKEN is not set';
-
-    final client = HttpClient();
-
+  Future<void> answerCallbackQuery(String callbackQueryId) async {
     try {
-      final request = await client.postUrl(
-        Uri.parse('https://api.telegram.org/bot$telegramBotToken/answerCallbackQuery'),
-      );
+      final request = await _client.postUrl(Uri.parse('https://api.telegram.org/bot$_botToken/answerCallbackQuery'));
       final payload = json.encode({'callback_query_id': callbackQueryId});
 
       request
@@ -86,9 +74,6 @@ class TelegramService {
       await response.drain();
     } catch (e) {
       stderr.writeln('Failed to answer callback query $callbackQueryId: $e');
-      rethrow;
-    } finally {
-      client.close();
     }
   }
 

@@ -21,6 +21,7 @@ jobs:
                   BACKEND_URL: ${{ secrets.BACKEND_URL }}
                   CRON_SECRET: ${{ secrets.CRON_SECRET }}
                   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+                  VERBOSELY_NOTIFY_ADMIN: ${{ secrets.VERBOSELY_NOTIFY_ADMIN }}
             - run: |
                   git config user.name "github-actions[bot]"
                   git config user.email "github-actions[bot]@users.noreply.github.com"
