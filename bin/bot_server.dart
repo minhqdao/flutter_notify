@@ -68,7 +68,8 @@ void main() async {
       final message = pick(data, 'message').asMapOrNull();
 
       if (message == null) {
-        stderr.writeln('Missing or invalid webhook message.');
+        final dataMap = pick(data).asMapOrNull<String, dynamic>();
+        if (dataMap != null) stderr.writeln('Unhandled Telegram update type: ${dataMap.keys.join(', ')}');
         return Response.ok('Missing or invalid webhook message.');
       }
 
