@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_notify/db/schema.dart';
+import 'package:flutter_notify/services/database_service.dart';
 
 class TelegramService {
   TelegramService();
@@ -41,11 +42,16 @@ class TelegramService {
         ..add(utf8.encode(payload));
 
       final response = await request.close();
+      final statusCode = response.statusCode;
 
-      if (response.statusCode != 200) {
+      if (statusCode == 403) {
+        stderr.writeln('Bot was likely blocked by user with chatId $chatId. Unsubscribing user.');
+        await DatabaseService().unsubscribeUser(chatId);
+        stdout.writeln('User with chatId $chatId unsubscribed successfully.');
+      } else if (statusCode != 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final errorData = json.decode(responseBody) as Map<String, dynamic>;
-        throw 'Telegram API error sending message: ${errorData['description']} (${response.statusCode})';
+        throw 'Status code $statusCode: ${errorData['description']} (${response.statusCode})';
       }
 
       await response.drain();
