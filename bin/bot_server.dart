@@ -48,11 +48,9 @@ void main() async {
               case NoUpdate():
                 throw 'The NoUpdate case should never be reached';
               case Updated(state: final state):
-                final releases = ReleaseStateService.getReleasesByChannel(state.releases, channel);
-                final reversed = releases.take(15).toList().reversed;
-
+                final releases = ReleaseStateService.getReleasesByChannel(state.releases, channel).take(15);
                 final header = '*Latest `${channel.name}` Flutter Releases:*';
-                final releasesLines = reversed
+                final releasesLines = releases
                     .map((r) => '• *${r.version}* • ${ReleaseStateService.getFormattedDate(r.date)}')
                     .toList();
 
