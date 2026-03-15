@@ -56,20 +56,29 @@ class ReleaseStateService {
         return const NoUpdate();
       }
 
-      if (response.statusCode != HttpStatus.ok) throw 'Failed to load releases: ${response.statusCode}';
+      if (response.statusCode != HttpStatus.ok) {
+        throw 'Failed to load releases: ${response.statusCode}, ${response.reasonPhrase}';
+      }
 
-      final body = await response.transform(utf8.decoder).join();
-      final json = jsonDecode(body);
-
-      final newEtag = response.headers.value(HttpHeaders.etagHeader)?.replaceFirst('W/', '').replaceAll('"', '');
-
+      final newEtag = response.headers.value(HttpHeaders.etagHeader);
       if (newEtag == null) throw 'No etag found';
-      if (newEtag == previousEtag) throw 'No new release found, etag is the same';
+      stdout.writeln('Received new etag (raw): $newEtag');
 
-      stdout.writeln('Received new etag (normalized): $newEtag');
+      final normalizedEtag = newEtag.replaceFirst('W/', '').replaceAll('"', '');
+      stdout.writeln('New, normalized etag: $normalizedEtag');
+      if (normalizedEtag == previousEtag) {
+        stdout.writeln('Normalized etag equals previous etag.');
+        return const NoUpdate();
+      }
+
+      final decodedBody = jsonDecode(await response.transform(utf8.decoder).join());
 
       return Updated(
-        ReleaseState(etag: newEtag, lastModified: DateTime.now(), releases: ReleaseState.mapReleases(json)),
+        ReleaseState(
+          etag: normalizedEtag,
+          lastModified: DateTime.now(),
+          releases: ReleaseState.mapReleases(decodedBody),
+        ),
       );
     } finally {
       client.close(force: true);
