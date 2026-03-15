@@ -1,4 +1,4 @@
-name: Cron
+name: Release Checker
 
 permissions:
     contents: write
