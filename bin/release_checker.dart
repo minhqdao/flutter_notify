@@ -15,12 +15,14 @@ Future<void> main(List<String> arguments) async {
         final verboselyNotifyAdmin = Platform.environment['VERBOSELY_NOTIFY_ADMIN'] == 'true';
         if (verboselyNotifyAdmin) await TelegramService().notifyAdmin('No new releases found');
       case Updated(state: final state):
+        stdout.writeln('New release(s) found!');
         await ReleaseStateService.writeState(state);
         final newReleases = ReleaseStateService.getSortedReleasesDiff(localReleaseState.releases, state.releases);
         final notificationtext = ReleaseStateService.getNewReleasesText(newReleases);
-        await BackendService.notifyUsers(notificationtext);
+        stdout.writeln(notificationtext);
     }
   } catch (e) {
+    stderr.writeln('Error: $e');
     await TelegramService().notifyAdmin('🚨 Error: $e');
     rethrow;
   }

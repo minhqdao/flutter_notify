@@ -69,7 +69,6 @@ class ReleaseStateService {
     final existingReleaseHashes = oldReleases.map((r) => r.hash).toSet();
     final newReleasesFound = newReleases.where((release) => !existingReleaseHashes.contains(release.hash)).toList();
     if (newReleasesFound.isEmpty) throw 'State has been marked as Updated, but no new releases found.';
-
     return sortByDescendingVersion(newReleasesFound);
   }
 
