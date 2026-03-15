@@ -42,11 +42,20 @@ class ReleaseStateService {
       final url = Uri.parse(_releaseEndpoint);
       final request = await client.getUrl(url);
 
-      if (previousEtag != null) request.headers.set(HttpHeaders.ifNoneMatchHeader, previousEtag);
+      if (previousEtag == null) {
+        stdout.writeln('No previous etag found, not attaching ${HttpHeaders.ifNoneMatchHeader} header.');
+      } else {
+        stdout.writeln('Attaching previous etag to request: $previousEtag');
+        request.headers.set(HttpHeaders.ifNoneMatchHeader, previousEtag);
+      }
 
       final response = await request.close();
 
-      if (response.statusCode == HttpStatus.notModified) return const NoUpdate();
+      if (response.statusCode == HttpStatus.notModified) {
+        stdout.writeln('Old etag equals new etag.');
+        return const NoUpdate();
+      }
+
       if (response.statusCode != HttpStatus.ok) throw 'Failed to load releases: ${response.statusCode}';
 
       final body = await response.transform(utf8.decoder).join();
@@ -56,6 +65,8 @@ class ReleaseStateService {
 
       if (newEtag == null) throw 'No etag found';
       if (newEtag == previousEtag) throw 'No new release found, etag is the same';
+
+      stdout.writeln('Received new etag: $newEtag');
 
       return Updated(
         ReleaseState(etag: newEtag, lastModified: DateTime.now(), releases: ReleaseState.mapReleases(json)),
