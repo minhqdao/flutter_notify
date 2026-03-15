@@ -61,12 +61,12 @@ class ReleaseStateService {
       final body = await response.transform(utf8.decoder).join();
       final json = jsonDecode(body);
 
-      final newEtag = response.headers.value(HttpHeaders.etagHeader);
+      final newEtag = response.headers.value(HttpHeaders.etagHeader)?.replaceFirst('W/', '').replaceAll('"', '');
 
       if (newEtag == null) throw 'No etag found';
       if (newEtag == previousEtag) throw 'No new release found, etag is the same';
 
-      stdout.writeln('Received new etag: $newEtag');
+      stdout.writeln('Received new etag (normalized): $newEtag');
 
       return Updated(
         ReleaseState(etag: newEtag, lastModified: DateTime.now(), releases: ReleaseState.mapReleases(json)),
