@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_notify/models/release_check_result.dart';
+import 'package:flutter_notify/services/backend_service.dart';
 import 'package:flutter_notify/services/release_state_service.dart';
 import 'package:flutter_notify/services/telegram_service.dart';
 
@@ -18,11 +19,11 @@ Future<void> main(List<String> arguments) async {
       case Updated(state: final state):
         stdout.writeln('New release(s) found!');
         await ReleaseStateService.writeState(state);
+        stdout.writeln('Local state updated with ${state.releases.length} releases and etag ${state.etag}.');
         final newReleases = ReleaseStateService.getSortedReleasesDiff(localReleaseState.releases, state.releases);
         final notificationtext = ReleaseStateService.getNewReleasesText(newReleases);
         stdout.writeln(notificationtext);
-        // await BackendService.notifyUsers(notificationtext);
-        await TelegramService().notifyAdmin(notificationtext); // for testing
+        await BackendService.notifyUsers(notificationtext);
     }
   } catch (e) {
     stderr.writeln('Error: $e');
