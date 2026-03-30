@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:sqlite3/sqlite3.dart';
+import 'package:drift_hrana/drift_hrana.dart';
 
 part 'schema.g.dart';
 
@@ -21,5 +22,13 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
-  static QueryExecutor _openConnection() => NativeDatabase.opened(sqlite3.open('sleepy-vicinity.db'));
+  static QueryExecutor _openConnection() {
+    final url = Platform.environment['DB_URL'];
+    if (url == null) throw 'DB_URL is not set';
+
+    final token = Platform.environment['DB_AUTH_TOKEN'];
+    if (token == null) throw 'DB_AUTH_TOKEN is not set';
+
+    return HranaDatabase(Uri.parse(url), jwtToken: token);
+  }
 }
