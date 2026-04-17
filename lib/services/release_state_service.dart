@@ -124,7 +124,7 @@ class ReleaseStateService {
     final header = '🎉 *$count New SDK $noun available!*';
 
     final newReleasesLines = releases.map((r) => '✅ `${r.channel.name}` • Flutter *${r.version}*').toList();
-    return '$header\n\n${newReleasesLines.join('\n')}';
+    return '$header\n${newReleasesLines.join('\n')}';
   }
 
   static String getFormattedDate(DateTime date) {
