@@ -1,7 +1,15 @@
 {
-  "etag": "9cc2dfdb9cb40676f09d880bc8ce96a9",
-  "last_modified": "2026-06-26T21:21:42.719820",
+  "etag": "1f22a05e26c3b93edbe30b00307378cd",
+  "last_modified": "2026-07-01T15:44:17.221996",
   "releases": [
+    {
+      "hash": "677d472756f83c14371dd8cc624387065f3d32a7",
+      "channel": "beta",
+      "version": "3.46.0-0.3.pre",
+      "release_date": "2026-07-01T15:35:19.216520Z",
+      "archive": "beta/linux/flutter_linux_3.46.0-0.3.pre-beta.tar.xz",
+      "sha256": "931c30fde3cc9b4eae2bbae750914c1ec60bfea4d46531e37f25caaa1a47d2da"
+    },
     {
       "hash": "0f5a2c46944eb4234fe23233e5786ee5ba0da69d",
       "channel": "beta",
