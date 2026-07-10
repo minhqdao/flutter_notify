@@ -1,7 +1,63 @@
 {
-  "etag": "a0bba8574e73f5f48db5672cdc35e105",
-  "last_modified": "2026-06-11T21:23:13.918406",
+  "etag": "44f14c4682959e45b254d7059116c26c",
+  "last_modified": "2026-07-09T20:48:52.310932",
   "releases": [
+    {
+      "hash": "ee80f08bbf97172ec030b8751ceab557177a34a6",
+      "channel": "stable",
+      "version": "3.44.6",
+      "release_date": "2026-07-09T18:35:32.476978Z",
+      "archive": "stable/linux/flutter_linux_3.44.6-stable.tar.xz",
+      "sha256": "a6320fd72e9a2690c08e2a6a70874a30cb120dee7c78f49d2c628bd7c9e20525"
+    },
+    {
+      "hash": "f94f4fc76b4d74543ed9b085bbd75341ef65de22",
+      "channel": "stable",
+      "version": "3.44.5",
+      "release_date": "2026-07-06T22:18:47.526282Z",
+      "archive": "stable/linux/flutter_linux_3.44.5-stable.tar.xz",
+      "sha256": "28aa13854feb9de44a317b97c4e886ea3f0af744027418b7e63885cfcd2951f3"
+    },
+    {
+      "hash": "677d472756f83c14371dd8cc624387065f3d32a7",
+      "channel": "beta",
+      "version": "3.46.0-0.3.pre",
+      "release_date": "2026-07-01T15:35:19.216520Z",
+      "archive": "beta/linux/flutter_linux_3.46.0-0.3.pre-beta.tar.xz",
+      "sha256": "931c30fde3cc9b4eae2bbae750914c1ec60bfea4d46531e37f25caaa1a47d2da"
+    },
+    {
+      "hash": "0f5a2c46944eb4234fe23233e5786ee5ba0da69d",
+      "channel": "beta",
+      "version": "3.46.0-0.2.pre",
+      "release_date": "2026-06-26T20:41:23.356693Z",
+      "archive": "beta/linux/flutter_linux_3.46.0-0.2.pre-beta.tar.xz",
+      "sha256": "fa1dac3ee744363a5d742874ea16443f2ab64d8de9d8c55e7cad7981842375ae"
+    },
+    {
+      "hash": "ad70ec4617166f1c38e5d2bfd388af71fda14f06",
+      "channel": "stable",
+      "version": "3.44.4",
+      "release_date": "2026-06-24T23:47:08.450467Z",
+      "archive": "stable/linux/flutter_linux_3.44.4-stable.tar.xz",
+      "sha256": "c853cda0312a162854c481fe6a1bc286d84fbb74bfab7037c39750061dc9b466"
+    },
+    {
+      "hash": "e5650835b030ba78dd9bb5d994bd00d790bc12fd",
+      "channel": "beta",
+      "version": "3.46.0-0.1.pre",
+      "release_date": "2026-06-24T21:35:55.278990Z",
+      "archive": "beta/linux/flutter_linux_3.46.0-0.1.pre-beta.tar.xz",
+      "sha256": "ea6f9ff354cf19466255a089d72af993add91e7a0592f2fb96bc28a50af3d094"
+    },
+    {
+      "hash": "e1fd963c6f6922bd32afde2e9698a363cd0406d2",
+      "channel": "stable",
+      "version": "3.44.3",
+      "release_date": "2026-06-22T17:20:53.950959Z",
+      "archive": "stable/linux/flutter_linux_3.44.3-stable.tar.xz",
+      "sha256": "00343ee5264999e8e90e2d02c6952ac3facbf46cf0c6a2518ac8f7d6afa7658c"
+    },
     {
       "hash": "c9a6c484230f8b5e408ec57be1ef71dee1e77020",
       "channel": "stable",
