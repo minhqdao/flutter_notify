@@ -72,7 +72,10 @@ void main() async {
       }
 
       final text = pick(message, 'text').asStringOrNull();
-      if (text == null) return Response.ok('Non-text message ignored.');
+      if (text == null) {
+        stderr.writeln('Non-text message ignored. Keys: ${message.keys.join(', ')}');
+        return Response.ok('Non-text message ignored.');
+      }
       final chatId = pick(message, 'chat', 'id').asIntOrThrow();
       final textParts = text.split(RegExp(r'\s+'));
       final command = textParts[0];
