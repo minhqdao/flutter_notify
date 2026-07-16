@@ -71,7 +71,8 @@ void main() async {
         return Response.ok('Missing or invalid webhook message.');
       }
 
-      final text = pick(message, 'text').asStringOrThrow();
+      final text = pick(message, 'text').asStringOrNull();
+      if (text == null) return Response.ok('Non-text message ignored.');
       final chatId = pick(message, 'chat', 'id').asIntOrThrow();
       final textParts = text.split(RegExp(r'\s+'));
       final command = textParts[0];
