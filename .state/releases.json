@@ -1,7 +1,15 @@
 {
-  "etag": "88651335cb7e0b622a878b5bec08cee3",
-  "last_modified": "2026-08-27T04:23:21.123306",
+  "etag": "d25ed5844e248fb6352092bdcc55cec8",
+  "last_modified": "2026-08-28T01:20:54.534772",
   "releases": [
+    {
+      "hash": "d3b14c876900e553bc736ca19295fc09e3853e8e",
+      "channel": "stable",
+      "version": "3.47.2",
+      "release_date": "2026-08-27T17:48:28.372726Z",
+      "archive": "stable/linux/flutter_linux_3.47.2-stable.tar.xz",
+      "sha256": "447878859d01ca9bfdb99a85f245af07ed8a15fedcd9d189c4749e8e92d1f185"
+    },
     {
       "hash": "87af191112a7455b061449b773b2bff92ccdbcd0",
       "channel": "beta",
