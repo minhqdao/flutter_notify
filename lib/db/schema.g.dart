@@ -474,7 +474,16 @@ class $$ChatIdsTableTableManager
                 joinedAt: joinedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$ChatIdsTable, ChatId>(table),
+                  BaseReferences<_$AppDatabase, $ChatIdsTable, ChatId>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),

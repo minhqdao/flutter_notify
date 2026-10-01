@@ -16,7 +16,7 @@ class ReleaseStateService {
 
   static Future<void> resetState() async {
     switch (await getAllFlutterReleases()) {
-      case Updated(state: final state):
+      case Updated(:final state):
         await writeState(state);
       case NoUpdate():
     }

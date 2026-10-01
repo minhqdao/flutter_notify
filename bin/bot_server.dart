@@ -47,7 +47,7 @@ void main() async {
             switch (result) {
               case NoUpdate():
                 throw 'The NoUpdate case should never be reached';
-              case Updated(state: final state):
+              case Updated(:final state):
                 final releases = ReleaseStateService.getReleasesByChannel(state.releases, channel).take(15);
                 final header = '*Latest `${channel.name}` Flutter Releases:*';
                 final releasesLines = releases
@@ -113,7 +113,7 @@ void main() async {
           switch (result) {
             case NoUpdate():
               throw 'The NoUpdate case should never be reached';
-            case Updated(state: final state):
+            case Updated(:final state):
               final unsortedReleases = [
                 ...ReleaseStateService.getLatestRelease(state.releases, Channel.stable, 1),
                 ...ReleaseStateService.getLatestRelease(state.releases, Channel.beta, 1),

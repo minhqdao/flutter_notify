@@ -34,7 +34,7 @@ class TelegramService {
         'chat_id': chatId,
         'text': _getEscapedText(message),
         'parse_mode': 'MarkdownV2',
-        if (replyMarkup != null) 'reply_markup': replyMarkup,
+        'reply_markup': ?replyMarkup,
       });
 
       request

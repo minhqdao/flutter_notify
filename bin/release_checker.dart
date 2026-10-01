@@ -16,7 +16,7 @@ Future<void> main(List<String> arguments) async {
         stdout.writeln('No new releases found. Aborting.');
         final verboselyNotifyAdmin = Platform.environment['VERBOSELY_NOTIFY_ADMIN'] == 'true';
         if (verboselyNotifyAdmin) await TelegramService().notifyAdmin('No new releases found');
-      case Updated(state: final state):
+      case Updated(:final state):
         stdout.writeln('New release(s) found!');
         await ReleaseStateService.writeState(state);
         stdout.writeln('Local state updated with ${state.releases.length} releases and etag ${state.etag}.');
